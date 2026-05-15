@@ -2,6 +2,7 @@ This was created for those who operate in the light;
 because the adversaries are already capable, hiding in the shadows.
 
 ═══════════════════════════════════════════════════════════════════════════════
+
 🔴 THE RED BOOK 10: Command & Control - FIELD OPERATOR'S FINAL COMPENDIUM
 ═══════════════════════════════════════════════════════════════════════════════
 
