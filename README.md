@@ -1,4 +1,4 @@
-🔴 THE RED BOOK — OPERATOR'S FINAL COMPENDIUM
+🔴 THE RED BOOK 10: Command & Control - FIELD OPERATOR'S FINAL COMPENDIUM
 ═══════════════════════════════════════════════════════════════════════════════
 
 [License: Educational Use Only] [Status: Living Document] [Version: 1.0.0]
