@@ -51,4 +51,4 @@ I preserved the original uploaded artifact and also created an `index.html` copy
 
 - `README.md`: executive summary and handling notes
 - `Technical.MD`: deeper static analysis
-- `red-book-site-contained.zip`: containment package with the original file and a browser-openable copy
+- `the-red-book_html.zip`: containment package with the original file and a browser-openable copy
