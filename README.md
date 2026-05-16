@@ -1,6 +1,8 @@
 This was created for those who operate in the light; 
 because the adversaries are already capable, hiding in the shadows.
 
+Part of a purple teaming compendium, red = offender, blue = defender, purple = forensic analysis, post IR remediation 
+
 ═══════════════════════════════════════════════════════════════════════════════
 
 🔴 THE RED BOOK 10: Command & Control - FIELD OPERATOR'S FINAL COMPENDIUM
